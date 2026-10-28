@@ -1,6 +1,6 @@
 {
   "name": "usage-meter",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Live usage meter under the prompt with context fill, rate-limit windows, session cost and token totals",
   "author": {
     "name": "Lukas Hinterleitner"
@@ -17,6 +17,48 @@
         "below"
       ],
       "default": "inline"
+    },
+    "showContext": {
+      "type": "boolean",
+      "title": "Show context",
+      "description": "Context window fill, with its bar.",
+      "default": true
+    },
+    "showFiveHour": {
+      "type": "boolean",
+      "title": "Show 5h limit",
+      "description": "How much of the 5-hour rate-limit window is used.",
+      "default": true
+    },
+    "showSevenDay": {
+      "type": "boolean",
+      "title": "Show 7d limit",
+      "description": "How much of the 7-day rate-limit window is used.",
+      "default": true
+    },
+    "showResetTimes": {
+      "type": "boolean",
+      "title": "Show reset times",
+      "description": "When each rate-limit window resets, after its bar.",
+      "default": true
+    },
+    "showCost": {
+      "type": "boolean",
+      "title": "Show cost",
+      "description": "What the session has cost so far, in US dollars.",
+      "default": true
+    },
+    "showTokens": {
+      "type": "boolean",
+      "title": "Show tokens",
+      "description": "Input and output tokens of every API request this session.",
+      "default": true
+    },
+    "showRequests": {
+      "type": "boolean",
+      "title": "Show requests",
+      "description": "How many API requests this session made.",
+      "default": true
     }
   }
 }

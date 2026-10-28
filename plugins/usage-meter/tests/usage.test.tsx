@@ -82,3 +82,18 @@ test('placement below draws the meter under the hint, its bars coloured', { opti
   expect((await ui.find({ type: 'Text', text: /\$/ }))?.text).toBe('$2.25 ')
   await ui.unmount()
 })
+
+test(
+  'parts set to false are left out',
+  { options: { showFiveHour: false, showResetTimes: false, showTokens: false, showRequests: false } },
+  async ($, on) => {
+    engine(on)
+
+    await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+    await $.session.measure(MEASURE)
+
+    const ui = await $.ui.mount({ ...HINT(160), surface: 'terminal' })
+    expect((await ui.find({ type: 'Text' }))?.text).toBe('? for shortcuts' + 'ctx ████░░ 60% · $2.25')
+    await ui.unmount()
+  },
+)

@@ -29,11 +29,18 @@ Answer `y` to add the marketplace, then pick a scope.
 
 ## Settings
 
-| Setting     | Values             | Default  |                                                                |
-| ----------- | ------------------ | -------- | -------------------------------------------------------------- |
-| `placement` | `inline`, `below`  | `inline` | `inline`: after the hint, on the same line, dim. `below`: on its own line under the hint, with green, yellow and red bars. |
+Set them in `/config` or with `/plugin configure usage-meter@lukas-hinterleitner`; the meter reloads with the new values.
 
-Change it in `/config`; the meter reloads with the new value.
+| Setting          | Values            | Default  | What it does                                                                 |
+| ---------------- | ----------------- | -------- | ---------------------------------------------------------------------------- |
+| `placement`      | `inline`, `below` | `inline` | `inline`: after the hint, on the same line, dim. `below`: on its own line under the hint, with green, yellow and red bars. |
+| `showContext`    | `true`, `false`   | `true`   | Context window fill                                                          |
+| `showFiveHour`   | `true`, `false`   | `true`   | 5-hour rate-limit window                                                     |
+| `showSevenDay`   | `true`, `false`   | `true`   | 7-day rate-limit window                                                      |
+| `showResetTimes` | `true`, `false`   | `true`   | Time until each rate-limit window resets                                     |
+| `showCost`       | `true`, `false`   | `true`   | Session cost in US dollars                                                   |
+| `showTokens`     | `true`, `false`   | `true`   | Input and output tokens                                                      |
+| `showRequests`   | `true`, `false`   | `true`   | Number of API requests                                                       |
 
 ## Use
 

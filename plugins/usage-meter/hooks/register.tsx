@@ -71,8 +71,23 @@ const tally = async ($: EngineInterface, usage: TurnUsage) => {
   await update($, snapshot, () => toSnapshot(fresh, fresh.startedAt))
 }
 
+// Each part of the meter shows unless its option is set to false.
+const SHOW_OPTIONS = {
+  context: 'showContext',
+  five_hour: 'showFiveHour',
+  seven_day: 'showSevenDay',
+  resets: 'showResetTimes',
+  cost: 'showCost',
+  tokens: 'showTokens',
+  requests: 'showRequests',
+} as const
+
 export const register: Register = (on, options) => {
   const placement = options.placement === 'below' ? 'below' : 'inline'
+  const shows = (part: keyof typeof SHOW_OPTIONS) => options[SHOW_OPTIONS[part]] !== false
+  // A rate-limit window of another kind (a gateway's spend limit) always shows.
+  const showsLimit = (kind: string) =>
+    kind === 'five_hour' || kind === 'seven_day' ? shows(kind) : true
 
   on('session.start', async ($, e, next) => {
     await $.command.register({ name: 'usage-meter', description: 'Show or hide the usage meter under the prompt' })
@@ -123,15 +138,17 @@ export const register: Register = (on, options) => {
     const now = await $.clock.now()
 
     const items: Item[] = [
-      ...(s.percent !== undefined ? [{ label: 'ctx', percent: s.percent, tail: '' }] : []),
-      ...s.limits.map(l => ({
-        label: LIMIT_NAMES[l.kind] ?? l.kind,
-        percent: l.percentUsed,
-        tail: untilReset(l.resetsAt, now),
-      })),
-      ...(s.usd !== undefined ? [{ label: `$${s.usd.toFixed(2)}`, tail: '' }] : []),
-      { label: 'in', tail: `${compact(t.input)} / out ${compact(t.output)}` },
-      { label: `${t.requests}`, tail: 'req' },
+      ...(shows('context') && s.percent !== undefined ? [{ label: 'ctx', percent: s.percent, tail: '' }] : []),
+      ...s.limits
+        .filter(l => showsLimit(l.kind))
+        .map(l => ({
+          label: LIMIT_NAMES[l.kind] ?? l.kind,
+          percent: l.percentUsed,
+          tail: shows('resets') ? untilReset(l.resetsAt, now) : '',
+        })),
+      ...(shows('cost') && s.usd !== undefined ? [{ label: `$${s.usd.toFixed(2)}`, tail: '' }] : []),
+      ...(shows('tokens') ? [{ label: 'in', tail: `${compact(t.input)} / out ${compact(t.output)}` }] : []),
+      ...(shows('requests') ? [{ label: `${t.requests}`, tail: 'req' }] : []),
     ]
 
     // Keep the leading items that fit the row; the tail ones go first.
