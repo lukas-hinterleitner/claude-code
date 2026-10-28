@@ -1,0 +1,22 @@
+{
+  "name": "usage-meter",
+  "version": "0.2.0",
+  "description": "Live usage meter under the prompt with context fill, rate-limit windows, session cost and token totals",
+  "author": {
+    "name": "Lukas Hinterleitner"
+  },
+  "license": "MIT",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "placement": {
+      "type": "string",
+      "title": "Placement",
+      "description": "inline: after the hint under the prompt, dim. below: on its own line under the hint, with coloured bars.",
+      "options": [
+        "inline",
+        "below"
+      ],
+      "default": "inline"
+    }
+  }
+}
