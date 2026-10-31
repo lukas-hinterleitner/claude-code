@@ -3,9 +3,20 @@
   "version": "0.3.0",
   "description": "Live usage meter under the prompt with context fill, rate-limit windows, session cost and token totals",
   "author": {
-    "name": "Lukas Hinterleitner"
+    "name": "Lukas Hinterleitner",
+    "url": "https://github.com/lukas-hinterleitner"
   },
+  "homepage": "https://github.com/lukas-hinterleitner/claude-code/tree/main/plugins/usage-meter",
+  "repository": "https://github.com/lukas-hinterleitner/claude-code",
   "license": "MIT",
+  "keywords": [
+    "usage",
+    "statusline",
+    "rate-limit",
+    "cost",
+    "tokens",
+    "context"
+  ],
   "types": "./types/index.d.ts",
   "userConfig": {
     "placement": {
