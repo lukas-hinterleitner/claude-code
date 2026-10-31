@@ -1,7 +1,8 @@
 {
   "name": "lukas-hinterleitner",
   "owner": {
-    "name": "Lukas Hinterleitner"
+    "name": "Lukas Hinterleitner",
+    "url": "https://github.com/lukas-hinterleitner"
   },
   "metadata": {
     "description": "Claude Code mods by Lukas Hinterleitner"
@@ -10,7 +11,9 @@
     {
       "name": "usage-meter",
       "source": "./plugins/usage-meter",
-      "description": "Live usage meter under the prompt: context fill, rate-limit windows, session cost and token totals"
+      "description": "Live usage meter under the prompt: context fill, rate-limit windows, session cost and token totals",
+      "category": "productivity",
+      "homepage": "https://github.com/lukas-hinterleitner/claude-code/tree/main/plugins/usage-meter"
     }
   ]
 }

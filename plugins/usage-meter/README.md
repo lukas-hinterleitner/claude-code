@@ -59,4 +59,4 @@ claude plugin test plugins/usage-meter
 
 ## License
 
-MIT
+[MIT](LICENSE) · [Changelog](CHANGELOG.md)
