@@ -14,7 +14,11 @@
     "subagent",
     "context",
     "tokens",
-    "read"
+    "read",
+    "claude-code",
+    "token-usage",
+    "context-window",
+    "large-files"
   ],
   "userConfig": {
     "minLines": {
