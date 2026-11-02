@@ -1,0 +1,27 @@
+{
+  "name": "haiku-reader",
+  "version": "0.1.0",
+  "description": "Hands large file reads to a Haiku subagent so the main model's context only gets the answer",
+  "author": {
+    "name": "Lukas Hinterleitner",
+    "url": "https://github.com/lukas-hinterleitner"
+  },
+  "homepage": "https://github.com/lukas-hinterleitner/claude-code/tree/main/plugins/haiku-reader",
+  "repository": "https://github.com/lukas-hinterleitner/claude-code",
+  "license": "MIT",
+  "keywords": [
+    "haiku",
+    "subagent",
+    "context",
+    "tokens",
+    "read"
+  ],
+  "userConfig": {
+    "minLines": {
+      "type": "number",
+      "title": "Line limit",
+      "description": "Whole-file reads of files with at least this many lines go to the bulk-reader agent instead.",
+      "default": 350
+    }
+  }
+}

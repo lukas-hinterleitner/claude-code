@@ -9,6 +9,7 @@ A [Claude Code](https://docs.claude.com/en/docs/claude-code) plugin marketplace 
 | Mod | Version | What it does |
 | --- | --- | --- |
 | [usage-meter](plugins/usage-meter) | 0.3.0 | Live usage meter under the prompt: context fill, rate-limit windows, session cost and token totals |
+| [haiku-reader](plugins/haiku-reader) | 0.1.0 | Hands large file reads to a Haiku subagent so the main model's context only gets the answer |
 
 ### usage-meter
 
@@ -17,6 +18,10 @@ A [Claude Code](https://docs.claude.com/en/docs/claude-code) plugin marketplace 
 ```
 
 Every part can be toggled, and the meter can sit inline or on its own line with coloured bars. See the [usage-meter README](plugins/usage-meter/README.md) for settings.
+
+### haiku-reader
+
+When Claude goes to read a file of 350+ lines whole, the read is turned away and Claude asks the `bulk-reader` subagent instead. That agent runs on Haiku and returns only the answer. Targeted reads, small files and the subagent's own reads pass untouched. See the [haiku-reader README](plugins/haiku-reader/README.md).
 
 ## Install
 
