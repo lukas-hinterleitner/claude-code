@@ -5,7 +5,7 @@
     "url": "https://github.com/lukas-hinterleitner"
   },
   "metadata": {
-    "description": "Claude Code mods by Lukas Hinterleitner"
+    "description": "Claude Code plugins: usage-meter (context, rate limits, cost and tokens under the prompt) and haiku-reader (large file reads go to a Haiku subagent to save tokens)"
   },
   "plugins": [
     {

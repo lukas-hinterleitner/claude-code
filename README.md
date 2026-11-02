@@ -1,15 +1,20 @@
-# Claude Code mods
+# Claude Code plugins: usage meter and Haiku file reader
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A [Claude Code](https://docs.claude.com/en/docs/claude-code) plugin marketplace with small mods that change the terminal interface.
+A [Claude Code](https://docs.claude.com/en/docs/claude-code) plugin marketplace with two mods for the terminal:
+
+- **usage-meter** shows context window fill, 5-hour and 7-day rate limits, session cost and token usage live under the prompt.
+- **haiku-reader** saves tokens and context by sending large file reads to a Haiku subagent, which returns only the answer.
+
+Install either one with `/plugin install <mod> --marketplace lukas-hinterleitner/claude-code`.
 
 ## Mods
 
 | Mod | Version | What it does |
 | --- | --- | --- |
 | [usage-meter](plugins/usage-meter) | 0.3.0 | Live usage meter under the prompt: context fill, rate-limit windows, session cost and token totals |
-| [haiku-reader](plugins/haiku-reader) | 0.1.0 | Hands large file reads to a Haiku subagent so the main model's context only gets the answer |
+| [haiku-reader](plugins/haiku-reader) | 0.1.1 | Hands large file reads to a Haiku subagent so the main model's context only gets the answer |
 
 ### usage-meter
 
@@ -38,6 +43,24 @@ claude plugin install <mod> --marketplace lukas-hinterleitner/claude-code
 ```
 
 Answer `y` to add the marketplace, then pick a scope. To update later, run `/plugin update <mod>`.
+
+## FAQ
+
+### How do I see my Claude Code usage, rate limits and cost?
+
+Install [usage-meter](plugins/usage-meter). It draws a meter on the hint line under the prompt with context window fill, how much of the 5-hour and 7-day rate-limit windows is used and when each resets, the session cost in US dollars, and input/output tokens per request, subagents included.
+
+### How do I reduce Claude Code token usage when reading large files?
+
+Install [haiku-reader](plugins/haiku-reader). Reads that would put 350 or more lines of a file into the context (via `Read`, `cat`, `head`, `tail` and similar) are turned away, and Claude asks the `haiku-reader:bulk-reader` subagent instead. That agent reads the file on the cheaper Haiku model and sends back only the answer, so the main model's context window stays small.
+
+### Can I change the line limit?
+
+Yes. The limit defaults to 350 and can be changed with `/config` or in `settings.json` under `pluginConfigs["haiku-reader"].options.minLines`.
+
+### How do I add this plugin marketplace to Claude Code?
+
+Run `/plugin install <mod> --marketplace lukas-hinterleitner/claude-code` and answer `y` when asked to add the marketplace. Update with `/plugin update <mod>`.
 
 ## Repository layout
 
