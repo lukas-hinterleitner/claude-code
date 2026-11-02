@@ -8,21 +8,25 @@ const FILES: Record<string, string> = {
   'small.ts': lines(20),
   'edge.ts': lines(350),
   'below.ts': lines(349),
+  'sub/deep.ts': lines(400),
 }
 
-// The engine hands fs hooks resolved paths, so the fake looks files up by name.
-const name = (path: string) => path.split('/').pop() ?? path
+// The engine hands fs hooks resolved paths, so the fake matches on the tail.
+const find = (path: string) =>
+  Object.entries(FILES).find(([key]) => path === key || path.endsWith(`/${key}`))?.[1]
 
 // Nothing sits beneath the plugin: each hook here stands for the engine,
 // with an in-memory file system and a tool that always succeeds.
 const engine = (on: Parameters<TestBody>[1]) => {
   on('fs.stat', (_, e) => {
-    if (FILES[name(e.path)] === undefined) throw Object.assign(new Error('ENOENT'), { code: 'ENOENT' })
-    return { value: { kind: 'file', size: FILES[name(e.path)]!.length, mtimeMs: 0, isLink: false } }
+    const text = find(e.path)
+    if (text === undefined) throw Object.assign(new Error('ENOENT'), { code: 'ENOENT' })
+    return { value: { kind: 'file', size: text.length, mtimeMs: 0, isLink: false } }
   })
   on('fs.read', (_, e) => {
-    if (FILES[name(e.path)] === undefined) throw new Error('ENOENT')
-    return { value: FILES[name(e.path)]! }
+    const text = find(e.path)
+    if (text === undefined) throw new Error('ENOENT')
+    return { value: text }
   })
   on('tool.call', () => ({ result: {} }))
 }
@@ -45,22 +49,46 @@ test('small files, missing files and the line just under the limit are read', as
   expect(isDenied(await $.tool.call({ tool: 'Read', file_path: 'edge.ts' }))).toBe(true)
 })
 
-test('a targeted read of a large file goes through', async ($, on) => {
+test('a small slice of a large file goes through; a large one does not', async ($, on) => {
   engine(on)
   expect(isDenied(await $.tool.call({ tool: 'Read', file_path: 'big.ts', offset: 100, limit: 50 }))).toBe(false)
+  expect(isDenied(await $.tool.call({ tool: 'Read', file_path: 'big.ts', offset: 300 }))).toBe(false)
+  expect(isDenied(await $.tool.call({ tool: 'Read', file_path: 'big.ts', limit: 5000 }))).toBe(true)
+  expect(isDenied(await $.tool.call({ tool: 'Read', file_path: 'big.ts', offset: 1 }))).toBe(true)
 })
 
 test("a subagent's own read of a large file goes through", async ($, on) => {
   engine(on)
   expect(isDenied(await $.tool.call({ tool: 'Read', file_path: 'big.ts', agentId: 'a1' }))).toBe(false)
+  expect(isDenied(await $.tool.call({ tool: 'Bash', command: 'cat big.ts', agentId: 'a1' }))).toBe(false)
 })
 
-test('cat of a large file is denied; pipes, redirects and other commands are not', async ($, on) => {
+test('Bash reads that would print a large file are denied', async ($, on) => {
   engine(on)
-  expect(isDenied(await $.tool.call({ tool: 'Bash', command: 'cat big.ts' }))).toBe(true)
-  expect(isDenied(await $.tool.call({ tool: 'Bash', command: 'cat -n small.ts "big.ts"' }))).toBe(true)
+  for (const command of [
+    'cat big.ts',
+    'cat -n small.ts "big.ts"',
+    'head -n 5000 big.ts',
+    'tail -n +2 big.ts',
+    'cd sub && cat deep.ts',
+    'git status; cat big.ts 2>/dev/null',
+  ]) {
+    expect(isDenied(await $.tool.call({ tool: 'Bash', command }))).toBe(true)
+  }
+})
 
-  for (const command of ['cat small.ts', 'cat big.ts | grep foo', 'cat big.ts > out.txt', 'head big.ts', 'git status']) {
+test('Bash commands that print little or nothing of a file go through', async ($, on) => {
+  engine(on)
+  for (const command of [
+    'cat small.ts',
+    'cat big.ts | grep foo',
+    'cat big.ts > out.txt',
+    'head big.ts',
+    'head -n 100 big.ts',
+    'tail -n +300 big.ts',
+    'cat deep.ts',
+    'git status',
+  ]) {
     expect(isDenied(await $.tool.call({ tool: 'Bash', command }))).toBe(false)
   }
 })
