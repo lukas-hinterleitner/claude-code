@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- The `minLines` prompt shown at install now says to leave it empty for the default of 350.
+
 ## 0.1.0
 
 - First release: a `bulk-reader` subagent on Haiku, and a guard that turns any read that would put a large file into the context into a pointer to that agent.

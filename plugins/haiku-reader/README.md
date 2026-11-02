@@ -34,7 +34,7 @@ If the guard itself fails, the call goes through rather than blocking work.
 | --- | --- | --- |
 | `minLines` | `350` | Whole-file reads of files with at least this many lines go to the bulk reader. |
 
-Change it with `/config`, or in `settings.json` under `pluginConfigs["haiku-reader"].options.minLines`.
+Claude Code asks for it once when the plugin is enabled; leave it empty to keep 350. Change it later with `/config`, or in `settings.json` under `pluginConfigs["haiku-reader"].options.minLines`.
 
 ## Trade-offs
 

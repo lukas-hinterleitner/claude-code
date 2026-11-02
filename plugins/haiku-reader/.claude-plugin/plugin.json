@@ -1,6 +1,6 @@
 {
   "name": "haiku-reader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hands large file reads to a Haiku subagent so the main model's context only gets the answer",
   "author": {
     "name": "Lukas Hinterleitner",
@@ -20,7 +20,7 @@
     "minLines": {
       "type": "number",
       "title": "Line limit",
-      "description": "Whole-file reads of files with at least this many lines go to the bulk-reader agent instead.",
+      "description": "Whole-file reads of files with at least this many lines go to the bulk-reader agent instead. Leave empty to use 350.",
       "default": 350
     }
   }
